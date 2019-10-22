@@ -1,7 +1,7 @@
 import React from 'react';
 
 
-const Card = ({name, email, id}) => { //destructuring in arguments no instead of "props"
+const Card = ({name, email, id}) => { //destructuring in arguments  instead of "props"
                                       //see below comment for another option (slightly less good)
 
   // const {name, email, id} = props; //destructuring to avoid props.id,
