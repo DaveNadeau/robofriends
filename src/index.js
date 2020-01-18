@@ -14,7 +14,12 @@ const store = createStore(searchRobots)
 //store is used to store the various possible states of an application and
 //can be passed to the DOM (ReactDOM) AS A PROP.
 
-ReactDOM.render(<App/>  , document.getElementById('root'));
+
+//Provider wraps the app so that store can be passed
+ReactDOM.render(
+  <Provider store = {store}>
+    <App/>)
+  </Provider>, document.getElementById('root'));
 
 
 // If you want your app to work offline and load faster, you can change
