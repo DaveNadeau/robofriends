@@ -3,19 +3,27 @@ import CardList from './CardList';
 // import {robots} from './robots';
 import SearchBox from './SearchBox';
 import Scroll from './Scroll';
-import {setSearchField} from './actions';
+import {setSearchField, requestRobots} from './actions';
 import {connect} from 'react-redux';
 
 //see the export default code at the bottom for the Below
 //this listens for state and sends out as a prop
+//recall state start as constants, are used in actions, and are seens as
+//initialState(s) in the reducers file
 const mapStateToProps = state => {
   return{
-    searchfield: state.searchfield
+    searchfield: state.searchRobots.searchfield,
+    robots: state.requestRobots.robots,
+    isPending: state.requestRobots.isPending,
+    error: state.requestRobots.error
   }
 }
 //this listens for props that are actions and dispatches them
 const mapDispatchToProps = (dispatch) => {
-  return {OnSearchChange: (event) => dispatch(setSearchField(event.target.value))}
+  return {
+    OnSearchChange: (event) => dispatch(setSearchField(event.target.value)),
+    onRequestRobots: () => dispatch(requestRobots())
+  }
 }
 
 class App extends Component {
@@ -29,9 +37,7 @@ class App extends Component {
   }
 
   componentDidMount() {
-    fetch('https://jsonplaceholder.typicode.com/users')
-      .then(response=> response.json())
-      .then(users=> this.setState({robots: users}));
+    this.props.onRequestRobots();
   }
 
 //OnSearchChange is passed to SearchBox below as a prop
@@ -42,13 +48,12 @@ class App extends Component {
   // }
 
   render(){
-    const {robots} = this.state;
-    const {searchfield, OnSearchChange} = this.props;
+    const {searchfield, OnSearchChange, robots, isPending} = this.props;
     const filteredRobots = robots.filter(robot =>{
       return robot.name.toLowerCase().includes(searchfield.toLowerCase());
     })
     //Note that robots (a state of App) is passed as a prop here to CardList below
-    if(this.state.robots.length === 0){
+    if(isPending){
       return <h1>loading...</h1>;
     } else {
       return (
